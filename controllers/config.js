@@ -6,10 +6,10 @@ var info =
 };
 
 var horario_WA = {
-  "OPEN_HOUR" : 8,
+  "OPEN_HOUR" : 0,
   "OPEN_MINUTE" : 0,
-  "CLOSE_HOUR" : 20,
-  "CLOSE_MINUTE" : 0,
+  "CLOSE_HOUR" : 23,
+  "CLOSE_MINUTE" : 59,
   dias : {
     "0" : ["domingo",true],
     "1" : ["lunes",true],

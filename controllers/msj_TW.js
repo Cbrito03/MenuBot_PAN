@@ -15,9 +15,14 @@ var mensaje_df = "¡Hola! $cr Soy *Avi*, tu asistente virtual 🤖 de Claro $cr 
     mensaje_df +="➡️ Envía *club* para conocer los establecimientos con promociones especiales solo por ser cliente Claro. 😎 💰  $cr $cr ";
     //mensaje_df +="➡️ Envía *asesor* si aún deseas ser atendido por uno de nuestros agentes de servicio al cliente o ventas. 👩💻👨💻 $cr $cr ";
 
-var mjs_horario = "Hola, gracias por su mensaje. En este momento no estamos disponible, nuestro horario de atención es de Lunes a Domingo de 7am a 10pm. $cr $cr";
-    mjs_horario += 'Para su comodidad ahora puede utilizar nuestros menú digital de autogestión ingresando al link: https://bit.ly/3aaWUlF';
-
+var mjs_horario = '¡Hola, gracias por comunicarte a Claro, te informamos nuestros horarios de atención!  $cr $cr ';
+    mjs_horario += '⌚Facebook y Twitter  $cr $cr ';
+    mjs_horario += 'Lunes a Domingo  $cr $cr ';
+    mjs_horario += '6:00 am a 22:00 horas  $cr $cr $cr';
+    mjs_horario += 'Whatsapp disponible 24/7  $cr $cr $cr';
+    mjs_horario += 'Te invitamos a ingresar a https://miclaro.com.pa/pa/ disponible 24/7 para que puedas hacer tus autogestiones.  $cr $cr';
+    mjs_horario += '¡Claro que sí!';
+   
 var msj_ayuda = "Descarga nuestra App renovada para ti $cr $cr ";
     msj_ayuda += "Android 👉🏼 https://play.google.com/store/apps/details?id=com.claro.miclaro&hl=es $cr $cr ";
     msj_ayuda += "Apple 👉🏼 https://apps.apple.com/gt/app/mi-claro-centroam%C3%A9rica/id953328601 ";
