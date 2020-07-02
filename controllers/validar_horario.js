@@ -40,6 +40,8 @@ validarHorario_WA = function()
 	var minuto = now.tz("America/Panama").format("m");
 	var dia = now.tz("America/Panama").format("d");
 
+	return true;
+
 	//console.log("[Brito] :: [validarHorario] :: [NOW] :: "+ now +" :: [Hora] :: "+ hora +" :: [Minuto] :: "+ minuto +" :: [Dia] :: "+ dia);
 
 	if(isValidHour(config.horario_WA.OPEN_HOUR, config.horario_WA.OPEN_MINUTE,config.horario_WA.CLOSE_HOUR) && isValidHour(config.horario_WA.OPEN_HOUR, config.horario_WA.CLOSE_MINUTE, config.horario_WA.CLOSE_HOUR))
