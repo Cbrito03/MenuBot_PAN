@@ -142,11 +142,11 @@ app.post('/wa/message', (req, res) => {
 								if(bandera_opt)
 								{
 									console.log(options);
-									/*request(options, function (error, response)
+									request(options, function (error, response)
 									{ 
 										if (error) throw new Error(error);
 										console.log(response.body);
-									});*/
+									});
 								}
 								
 							}
@@ -334,11 +334,11 @@ app.post('/tw/message', (req, res) => {
 								if(bandera_opt)
 								{
 									console.log(options);
-									/*request(options, function (error, response)
+									request(options, function (error, response)
 									{ 
 										if (error) throw new Error(error);
 										console.log(response.body);
-									});*/
+									});
 								}
 							}							
 
@@ -524,11 +524,11 @@ app.post('/fb/message', (req, res) => {
 								if(bandera_opt)
 								{
 									console.log(options);
-									/*request(options, function (error, response)
+									request(options, function (error, response)
 									{ 
 										if (error) throw new Error(error);
 										console.log(response.body);
-									});*/
+									});
 								}
 							}							
 
