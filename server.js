@@ -66,105 +66,118 @@ app.post('/wa/message', (req, res) => {
 					{
 						if(cadena !== '' && typeof cadena !== "undefined") 
 						{
-							cadena = cadena.text.toLowerCase(); // minusculas
-							cadena = cadena.trim();
-							msj_buscar_opcion = cadena;
-							cadena = cadena.replace(/,/g,"").replace(/;/g,"").replace(/:/g,"").replace(/\./g,""); // borramos ,;.:
-							cadena = cadena.split(" "); // lo convertimo en array mediante los espacios
-
-							for(var i = 0; i < cadena.length; i++)
+							if(context.lastInteractionFinishType !== "CLIENT_TIMEOUT")
 							{
-								for(var atr in msj_wa.palabras)
+								cadena = cadena.text.toLowerCase(); // minusculas
+								cadena = cadena.trim();
+								msj_buscar_opcion = cadena;
+								cadena = cadena.replace(/,/g,"").replace(/;/g,"").replace(/:/g,"").replace(/\./g,""); // borramos ,;.:
+								cadena = cadena.split(" "); // lo convertimo en array mediante los espacios
+
+								for(var i = 0; i < cadena.length; i++)
 								{
-									if(atr.toLowerCase() === cadena[i])
+									for(var atr in msj_wa.palabras)
 									{
-										opcion = cadena[i];
-										//msj_buscar = cadena[i];
-										if(msj_wa.palabras[atr].action.queue === "" && msj_wa.palabras[atr].action.type !== "transfer")
+										if(atr.toLowerCase() === cadena[i])
 										{
-											result_action = msj_wa.palabras[atr].action;
-											result_messages = msj_wa.palabras[atr].messages;
-										}
-										else if(msj_wa.palabras[atr].action.queue !== "" && msj_wa.palabras[atr].action.type === "transfer")
-										{
-											if(horarios)
+											opcion = cadena[i];
+											//msj_buscar = cadena[i];
+											if(msj_wa.palabras[atr].action.queue === "" && msj_wa.palabras[atr].action.type !== "transfer")
 											{
 												result_action = msj_wa.palabras[atr].action;
-												result_messages = msj_wa.palabras[atr].messages;												
-												bandera_tranferido = true;										
+												result_messages = msj_wa.palabras[atr].messages;
 											}
-											else
-											{	
-												console.log("[Brito] :: [No cumple horario] :: [horarios] :: "+horarios);												
-						                        
-						                        result_messages = msj_wa.msj_fuera_horario.messages;
-												result_action = msj_wa.msj_fuera_horario.action;
-						                        bandera_fueraHorario = true;				                        				                        
+											else if(msj_wa.palabras[atr].action.queue !== "" && msj_wa.palabras[atr].action.type === "transfer")
+											{
+												if(horarios)
+												{
+													result_action = msj_wa.palabras[atr].action;
+													result_messages = msj_wa.palabras[atr].messages;												
+													bandera_tranferido = true;										
+												}
+												else
+												{	
+													console.log("[Brito] :: [No cumple horario] :: [horarios] :: "+horarios);												
+													
+													result_messages = msj_wa.msj_fuera_horario.messages;
+													result_action = msj_wa.msj_fuera_horario.action;
+													bandera_fueraHorario = true;				                        				                        
+												}
 											}
+											
+											bandera = true;
+											bandera_opt = true;
+											break;
 										}
-										
-										bandera = true;
-										bandera_opt = true;
-										break;
-									}
-								}      
-								if(bandera){ break; }
-							}
-
-							if(!bandera)
-							{
-								result_messages = msj_wa.msj_default.messages;
-								result_action = msj_wa.msj_default.action;
-							}
-
-							console.log("[Brito] :: [message] :: [msj_buscar_opcion] :: " + msj_buscar_opcion);	
-
-							var options = {
-								'method': 'POST',
-								'url': 'https://estadisticasmenubot.mybluemix.net/opcion/insert',
-								'headers': {
-									'Content-Type': 'application/json'
-								},
-								body: JSON.stringify(
-								{
-									"conversacion_id": conversationID,
-									"pais": config.info.pais,
-									"app": config.info.nomApp,
-									"opcion": opcion,
-									"transferencia": bandera_tranferido,
-									"fueraHorario": bandera_fueraHorario,
-									"grupoACD": result_action.queue
-								})
-							};           
-
-							if(bandera)
-							{
-								if(bandera_opt)
-								{
-									console.log(options);
-									request(options, function (error, response)
-									{ 
-										if (error) throw new Error(error);
-										console.log(response.body);
-									});
+									}      
+									if(bandera){ break; }
 								}
-								
+
+								if(!bandera)
+								{
+									result_messages = msj_wa.msj_default.messages;
+									result_action = msj_wa.msj_default.action;
+								}
+
+								console.log("[Brito] :: [message] :: [msj_buscar_opcion] :: " + msj_buscar_opcion);	
+
+								var options = {
+									'method': 'POST',
+									'url': 'https://estadisticasmenubot.mybluemix.net/opcion/insert',
+									'headers': {
+										'Content-Type': 'application/json'
+									},
+									body: JSON.stringify(
+									{
+										"conversacion_id": conversationID,
+										"pais": config.info.pais,
+										"app": config.info.nomApp,
+										"opcion": opcion,
+										"transferencia": bandera_tranferido,
+										"fueraHorario": bandera_fueraHorario,
+										"grupoACD": result_action.queue
+									})
+								};           
+
+								if(bandera)
+								{
+									if(bandera_opt)
+									{
+										console.log(options);
+										request(options, function (error, response)
+										{ 
+											if (error) throw new Error(error);
+											console.log(response.body);
+										});
+									}
+									
+								}							
+
+								console.log("[Brito] :: [channel] :: ", channel, " :: [opcion] :: ", opcion);              				
+
+								resultado = {
+									"context": context,
+									"action": result_action,
+									"messages": result_messages,
+									"additionalInfo": {
+										"key":"RUT",
+										"RUT":"1-9"
+									}
+								}
 							}
-							
-
-              				console.log("[Brito] :: [channel] :: ", channel, " :: [opcion] :: ", opcion);              				
-
-							resultado = {
-								"context":{
-									"agent":false,
-									"callback":false,
-									"video":false
-								},
-								"action": result_action,
-								"messages": result_messages,
-								"additionalInfo": {
-									"key":"RUT",
-									"RUT":"1-9"
+							else if(context.lastInteractionFinishType == "CLIENT_TIMEOUT")
+							{
+								resultado = {
+									"context": context,
+									"action": {
+										"type" : "transfer",
+										"queue" : context.lastInteractionQueue,
+									},
+									"messages": [],
+									"additionalInfo": {
+										"key":"RUT",
+										"RUT":"1-9"
+									}
 								}
 							}
 
@@ -258,103 +271,117 @@ app.post('/tw/message', (req, res) => {
 					{
 						if(cadena !== '' && typeof cadena !== "undefined") 
 						{
-							cadena = cadena.text.toLowerCase(); // minusculas
-							cadena = cadena.trim();
-							msj_buscar_opcion = cadena;
-							cadena = cadena.replace(/,/g,"").replace(/;/g,"").replace(/:/g,"").replace(/\./g,""); // borramos ,;.:
-							cadena = cadena.split(" "); // lo convertimo en array mediante los espacios
-
-							for(var i = 0; i < cadena.length; i++)
+							if(context.lastInteractionFinishType !== "CLIENT_TIMEOUT")
 							{
-								for(var atr in msj_tw.palabras)
+								cadena = cadena.text.toLowerCase(); // minusculas
+								cadena = cadena.trim();
+								msj_buscar_opcion = cadena;
+								cadena = cadena.replace(/,/g,"").replace(/;/g,"").replace(/:/g,"").replace(/\./g,""); // borramos ,;.:
+								cadena = cadena.split(" "); // lo convertimo en array mediante los espacios
+
+								for(var i = 0; i < cadena.length; i++)
 								{
-									if(atr.toLowerCase() === cadena[i])
+									for(var atr in msj_tw.palabras)
 									{
-										opcion = cadena[i];
-										//msj_buscar = cadena[i];
-										if(msj_tw.palabras[atr].action.queue === "" && msj_tw.palabras[atr].action.type !== "transfer")
+										if(atr.toLowerCase() === cadena[i])
 										{
-											result_action = msj_tw.palabras[atr].action;
-											result_messages = msj_tw.palabras[atr].messages;
-										}
-										else if(msj_tw.palabras[atr].action.queue !== "" && msj_tw.palabras[atr].action.type === "transfer")
-										{
-											if(horarios)
+											opcion = cadena[i];
+											//msj_buscar = cadena[i];
+											if(msj_tw.palabras[atr].action.queue === "" && msj_tw.palabras[atr].action.type !== "transfer")
 											{
 												result_action = msj_tw.palabras[atr].action;
-												result_messages = msj_tw.palabras[atr].messages;												
-												bandera_tranferido = true;										
+												result_messages = msj_tw.palabras[atr].messages;
 											}
-											else
-											{	
-												console.log("[Brito] :: [No cumple horario] :: [horarios] :: "+horarios);												
-						                        
-						                        result_messages = msj_tw.msj_fuera_horario.messages;
-												result_action = msj_tw.msj_fuera_horario.action;
-						                        bandera_fueraHorario = true;				                        				                        
+											else if(msj_tw.palabras[atr].action.queue !== "" && msj_tw.palabras[atr].action.type === "transfer")
+											{
+												if(horarios)
+												{
+													result_action = msj_tw.palabras[atr].action;
+													result_messages = msj_tw.palabras[atr].messages;												
+													bandera_tranferido = true;										
+												}
+												else
+												{	
+													console.log("[Brito] :: [No cumple horario] :: [horarios] :: "+horarios);												
+													
+													result_messages = msj_tw.msj_fuera_horario.messages;
+													result_action = msj_tw.msj_fuera_horario.action;
+													bandera_fueraHorario = true;				                        				                        
+												}
 											}
+											
+											bandera = true;
+											bandera_opt = true;
+											break;
 										}
-										
-										bandera = true;
-										bandera_opt = true;
-										break;
-									}
-								}      
-								if(bandera){ break; }
-							}
-
-							if(!bandera)
-							{
-								result_messages = msj_tw.msj_default.messages;
-								result_action = msj_tw.msj_default.action;
-							}
-
-							console.log("[Brito] :: [message] :: [msj_buscar_opcion] :: " + msj_buscar_opcion);	
-
-							var options = {
-								'method': 'POST',
-								'url': 'https://estadisticasmenubot.mybluemix.net/opcion/insert',
-								'headers': {
-									'Content-Type': 'application/json'
-								},
-								body: JSON.stringify(
-								{
-									"conversacion_id": conversationID,
-									"pais": config.info.pais,
-									"app": config.info.nomApp,
-									"opcion": opcion,
-									"transferencia": bandera_tranferido,
-									"fueraHorario": bandera_fueraHorario,
-									"grupoACD": result_action.queue
-								})
-							};           
-
-							if(bandera)
-							{
-								if(bandera_opt)
-								{
-									console.log(options);
-									request(options, function (error, response)
-									{ 
-										if (error) throw new Error(error);
-										console.log(response.body);
-									});
+									}      
+									if(bandera){ break; }
 								}
-							}							
 
-              				console.log("[Brito] :: [channel] :: ", channel, " :: [opcion] :: ", opcion);              				
+								if(!bandera)
+								{
+									result_messages = msj_tw.msj_default.messages;
+									result_action = msj_tw.msj_default.action;
+								}
 
-							resultado = {
-								"context":{
-									"agent":false,
-									"callback":false,
-									"video":false
-								},
-								"action": result_action,
-								"messages": result_messages,
-								"additionalInfo": {
-									"key":"RUT",
-									"RUT":"1-9"
+								console.log("[Brito] :: [message] :: [msj_buscar_opcion] :: " + msj_buscar_opcion);	
+
+								var options = {
+									'method': 'POST',
+									'url': 'https://estadisticasmenubot.mybluemix.net/opcion/insert',
+									'headers': {
+										'Content-Type': 'application/json'
+									},
+									body: JSON.stringify(
+									{
+										"conversacion_id": conversationID,
+										"pais": config.info.pais,
+										"app": config.info.nomApp,
+										"opcion": opcion,
+										"transferencia": bandera_tranferido,
+										"fueraHorario": bandera_fueraHorario,
+										"grupoACD": result_action.queue
+									})
+								};           
+
+								if(bandera)
+								{
+									if(bandera_opt)
+									{
+										console.log(options);
+										request(options, function (error, response)
+										{ 
+											if (error) throw new Error(error);
+											console.log(response.body);
+										});
+									}
+								}							
+
+								console.log("[Brito] :: [channel] :: ", channel, " :: [opcion] :: ", opcion);              				
+
+								resultado = {
+									"context": context,
+									"action": result_action,
+									"messages": result_messages,
+									"additionalInfo": {
+										"key":"RUT",
+										"RUT":"1-9"
+									}
+								}
+							}
+							else if(context.lastInteractionFinishType == "CLIENT_TIMEOUT")
+							{
+								resultado = {
+									"context": context,
+									"action": {
+										"type" : "transfer",
+    									"queue" : context.lastInteractionQueue,
+									},
+									"messages": [],
+									"additionalInfo": {
+										"key":"RUT",
+										"RUT":"1-9"
+									}
 								}
 							}
 
@@ -448,103 +475,117 @@ app.post('/fb/message', (req, res) => {
 					{
 						if(cadena !== '' && typeof cadena !== "undefined") 
 						{
-							cadena = cadena.text.toLowerCase(); // minusculas
-							cadena = cadena.trim();
-							msj_buscar_opcion = cadena;
-							cadena = cadena.replace(/,/g,"").replace(/;/g,"").replace(/:/g,"").replace(/\./g,""); // borramos ,;.:
-							cadena = cadena.split(" "); // lo convertimo en array mediante los espacios
-
-							for(var i = 0; i < cadena.length; i++)
+							if(context.lastInteractionFinishType !== "CLIENT_TIMEOUT")
 							{
-								for(var atr in msj_fb.palabras)
+								cadena = cadena.text.toLowerCase(); // minusculas
+								cadena = cadena.trim();
+								msj_buscar_opcion = cadena;
+								cadena = cadena.replace(/,/g,"").replace(/;/g,"").replace(/:/g,"").replace(/\./g,""); // borramos ,;.:
+								cadena = cadena.split(" "); // lo convertimo en array mediante los espacios
+
+								for(var i = 0; i < cadena.length; i++)
 								{
-									if(atr.toLowerCase() === cadena[i])
+									for(var atr in msj_fb.palabras)
 									{
-										opcion = cadena[i];
-										//msj_buscar = cadena[i];
-										if(msj_fb.palabras[atr].action.queue === "" && msj_fb.palabras[atr].action.type !== "transfer")
+										if(atr.toLowerCase() === cadena[i])
 										{
-											result_action = msj_fb.palabras[atr].action;
-											result_messages = msj_fb.palabras[atr].messages;
-										}
-										else if(msj_fb.palabras[atr].action.queue !== "" && msj_fb.palabras[atr].action.type === "transfer")
-										{
-											if(horarios)
+											opcion = cadena[i];
+											//msj_buscar = cadena[i];
+											if(msj_fb.palabras[atr].action.queue === "" && msj_fb.palabras[atr].action.type !== "transfer")
 											{
 												result_action = msj_fb.palabras[atr].action;
-												result_messages = msj_fb.palabras[atr].messages;												
-												bandera_tranferido = true;										
+												result_messages = msj_fb.palabras[atr].messages;
 											}
-											else
-											{	
-												console.log("[Brito] :: [No cumple horario] :: [horarios] :: "+horarios);												
-						                        
-						                        result_messages = msj_fb.msj_fuera_horario.messages;
-												result_action = msj_fb.msj_fuera_horario.action;
-						                        bandera_fueraHorario = true;				                        				                        
+											else if(msj_fb.palabras[atr].action.queue !== "" && msj_fb.palabras[atr].action.type === "transfer")
+											{
+												if(horarios)
+												{
+													result_action = msj_fb.palabras[atr].action;
+													result_messages = msj_fb.palabras[atr].messages;												
+													bandera_tranferido = true;										
+												}
+												else
+												{	
+													console.log("[Brito] :: [No cumple horario] :: [horarios] :: "+horarios);												
+													
+													result_messages = msj_fb.msj_fuera_horario.messages;
+													result_action = msj_fb.msj_fuera_horario.action;
+													bandera_fueraHorario = true;				                        				                        
+												}
 											}
+											
+											bandera = true;
+											bandera_opt = true;
+											break;
 										}
-										
-										bandera = true;
-										bandera_opt = true;
-										break;
-									}
-								}      
-								if(bandera){ break; }
-							}
-
-							if(!bandera)
-							{
-								result_messages = msj_fb.msj_default.messages;
-								result_action = msj_fb.msj_default.action;
-							}
-
-							console.log("[Brito] :: [message] :: [msj_buscar_opcion] :: " + msj_buscar_opcion);	
-
-							var options = {
-								'method': 'POST',
-								'url': 'https://estadisticasmenubot.mybluemix.net/opcion/insert',
-								'headers': {
-									'Content-Type': 'application/json'
-								},
-								body: JSON.stringify(
-								{
-									"conversacion_id": conversationID,
-									"pais": config.info.pais,
-									"app": config.info.nomApp,
-									"opcion": opcion,
-									"transferencia": bandera_tranferido,
-									"fueraHorario": bandera_fueraHorario,
-									"grupoACD": result_action.queue
-								})
-							};           
-
-							if(bandera)
-							{
-								if(bandera_opt)
-								{
-									console.log(options);
-									request(options, function (error, response)
-									{ 
-										if (error) throw new Error(error);
-										console.log(response.body);
-									});
+									}      
+									if(bandera){ break; }
 								}
-							}							
 
-              				console.log("[Brito] :: [channel] :: ", channel, " :: [opcion] :: ", opcion);              				
+								if(!bandera)
+								{
+									result_messages = msj_fb.msj_default.messages;
+									result_action = msj_fb.msj_default.action;
+								}
 
-							resultado = {
-								"context":{
-									"agent":false,
-									"callback":false,
-									"video":false
-								},
-								"action": result_action,
-								"messages": result_messages,
-								"additionalInfo": {
-									"key":"RUT",
-									"RUT":"1-9"
+								console.log("[Brito] :: [message] :: [msj_buscar_opcion] :: " + msj_buscar_opcion);	
+
+								var options = {
+									'method': 'POST',
+									'url': 'https://estadisticasmenubot.mybluemix.net/opcion/insert',
+									'headers': {
+										'Content-Type': 'application/json'
+									},
+									body: JSON.stringify(
+									{
+										"conversacion_id": conversationID,
+										"pais": config.info.pais,
+										"app": config.info.nomApp,
+										"opcion": opcion,
+										"transferencia": bandera_tranferido,
+										"fueraHorario": bandera_fueraHorario,
+										"grupoACD": result_action.queue
+									})
+								};           
+
+								if(bandera)
+								{
+									if(bandera_opt)
+									{
+										console.log(options);
+										request(options, function (error, response)
+										{ 
+											if (error) throw new Error(error);
+											console.log(response.body);
+										});
+									}
+								}							
+
+								console.log("[Brito] :: [channel] :: ", channel, " :: [opcion] :: ", opcion);              				
+
+								resultado = {
+									"context": context,
+									"action": result_action,
+									"messages": result_messages,
+									"additionalInfo": {
+										"key":"RUT",
+										"RUT":"1-9"
+									}
+								}
+							}
+							else if(context.lastInteractionFinishType == "CLIENT_TIMEOUT")
+							{
+								resultado = {
+									"context": context,
+									"action": {
+										"type" : "transfer",
+    									"queue" : context.lastInteractionQueue,
+									},
+									"messages": [],
+									"additionalInfo": {
+										"key":"RUT",
+										"RUT":"1-9"
+									}
 								}
 							}
 
