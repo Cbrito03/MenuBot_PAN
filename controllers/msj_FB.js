@@ -10,7 +10,7 @@ var mensaje_df = "¡Hola! $cr Soy *Avi*, tu asistente virtual 🤖 de Claro $cr 
     mensaje_df +="➡️ Envía *recarga* para hacer una recarga.  $cr $cr ";
     mensaje_df +="➡️ Envía *paquete* para compra de paquete. $cr $cr ";
     mensaje_df +="➡️ Envía *ayuda* para conocer todo lo que puedes hacer en un mismo lugar. ¡Puedes consultar tu saldo, tus paquetes contratados, tu consumo de internet móvil y mucho más!  😎 $cr $cr ";
-    mensaje_df +="➡️ Envía *asistencia* si presentas inconvenientes con tu internet de celular, llamadas o mensajes de texto📱. $cr $cr ";
+    mensaje_df +="➡️ Envía *asistencia* si necesitas ayuda con tus servicios móviles o fijos 📱 💻 📺. $cr $cr ";
     mensaje_df +="➡️ Envía *Tienda* si deseas conocer los horarios de nuestras sucursales $cr $cr ";
     mensaje_df +="➡️ Envía *club* para conocer los establecimientos con promociones especiales solo por ser cliente Claro. 😎 💰  $cr $cr ";
     //mensaje_df +="➡️ Envía *asesor* si aún deseas ser atendido por uno de nuestros agentes de servicio al cliente o ventas. 👩💻👨💻 $cr $cr ";
@@ -23,14 +23,18 @@ var mjs_horario = '¡Hola, gracias por comunicarte a Claro, te informamos nuestr
 	 mjs_horario += 'Te invitamos a ingresar a https://miclaro.com.pa/pa/ disponible 24/7 para que puedas hacer tus autogestiones.  $cr $cr';
 	 mjs_horario += '¡Claro que sí!';
 
-var msj_ayuda = "Descarga nuestra App renovada para ti $cr $cr ";
-    msj_ayuda += "Android 👉🏼 https://play.google.com/store/apps/details?id=com.claro.miclaro&hl=es $cr $cr ";
-    msj_ayuda += "Apple 👉🏼 https://apps.apple.com/gt/app/mi-claro-centroam%C3%A9rica/id953328601 ";
+var msj_ayuda = "Ingresa aquí 👉🏼  https://miclaro.com.pa/ si deseas realizar alguna de las siguientes gestiones: $cr $cr ";
+   msj_ayuda += "Pagos de factura $cr";
+   msj_ayuda += "Consulta de saldo $cr";
+   msj_ayuda += "Recargas $cr";
+   msj_ayuda += "Paquetes prepago  $cr";
+   msj_ayuda += "Horarios y ubicaciones de nuestras tiendas $cr";
+   msj_ayuda += "Promociones Vigentes  $cr";
 
 var msj_club = "Si eres Claro 😉 eres parte del club con beneficios y descuentos. $cr $cr ";
     msj_club += "¡Descarga la App! 👇 $cr $cr ";
     msj_club += "Android: http://bit.ly/ClaroClub-Android $cr $cr ";
-    msj_club += "iOS: http://bit.ly/ClaroClubiOS $cr $cr ";
+    msj_club += "IOS: http://bit.ly/ClaroClubiOS $cr $cr ";
 
 var palabras = {
   "cotizar": {
