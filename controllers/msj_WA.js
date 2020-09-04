@@ -1,6 +1,17 @@
-var colas = {
+/*var colas = {
   "cotizar" : "PA_WA_Ventas",
   "asistencia" : "PA_Wa_Movil"
+};*/
+
+var colas = {
+  "cotizar" : {
+      "timeout" : 960000,
+      "acd" : "PA_WA_Ventas"
+  },
+  "asistencia" : {
+      "timeout" : 960000,
+      "acd" : "PA_Wa_Movil"
+  }
 };
 
 var mensaje_df = "¡Hola! $cr Soy *Avi*, tu asistente virtual 🤖 de Claro $cr ";
@@ -40,7 +51,8 @@ var palabras = {
   "cotizar": {
     "action" : {
       "type" : "transfer",
-      "queue" : colas.cotizar
+      "queue" : colas.cotizar["acd"],
+      "timeoutInactivity" : colas.cotizar["timeout"]
     },
     "messages" : [
       {
@@ -79,7 +91,8 @@ var palabras = {
   "asistencia": {
    "action" : {
       "type" : "transfer",
-      "queue" : colas.asistencia
+      "queue" : colas.asistencia["acd"],
+      "timeoutInactivity" : colas.asistencia["timeout"]
     },
     "messages" : []
   },

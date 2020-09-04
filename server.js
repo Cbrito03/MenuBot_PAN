@@ -14,7 +14,7 @@ var msj_tw = require('./controllers/msj_TW.js');
 var horario = require('./controllers/validar_horario.js');
 var moment = require('moment');
 var moment_timezone = require('moment-timezone');
-var port = 8080;
+const axios = require('axios');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -30,7 +30,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.post('/wa/message', (req, res) => {
+app.post('/wa/message', async (req, res) => {
 
 	console.log("[Brito] :: [Peticion POST PAN /wa/message]");
 	
@@ -117,41 +117,34 @@ app.post('/wa/message', (req, res) => {
 								{
 									result_messages = msj_wa.msj_default.messages;
 									result_action = msj_wa.msj_default.action;
-								}
-
-								console.log("[Brito] :: [message] :: [msj_buscar_opcion] :: " + msj_buscar_opcion);	
+								}		
 
 								var options = {
-									'method': 'POST',
-									'url': 'https://estadisticasmenubot.mybluemix.net/opcion/insert',
-									'headers': {
-										'Content-Type': 'application/json'
-									},
-									body: JSON.stringify(
-									{
-										"conversacion_id": conversationID,
-										"pais": config.info.pais,
-										"app": config.info.nomApp,
-										"opcion": opcion,
-										"transferencia": bandera_tranferido,
-										"fueraHorario": bandera_fueraHorario,
-										"grupoACD": result_action.queue
+									method : 'post',
+									url : config.url_estd,
+									headers : { 'Content-Type': 'application/json'},
+									data: JSON.stringify({
+										"conversacion_id" : conversationID,
+										"pais" : config.info.pais,
+										"app" : config.info.nomApp,
+										"opcion" : opcion,
+										"rrss" : "WA",
+										"transferencia" : bandera_tranferido,
+										"fueraHorario" : bandera_fueraHorario,
+										"grupoACD" : result_action.queue				
 									})
-								};           
+								};          
 
-								if(bandera)
+								if(bandera == true)
 								{
 									if(bandera_opt)
 									{
 										console.log(options);
-										request(options, function (error, response)
-										{ 
-											if (error) throw new Error(error);
-											console.log(response.body);
-										});
-									}
-									
-								}							
+										var resultado_axios = await axios(options);
+										console.log("[Resultado AXIOS] :: ");
+										console.log(resultado_axios);
+									}									
+								}					
 
 								console.log("[Brito] :: [channel] :: ", channel, " :: [opcion] :: ", opcion);              				
 
@@ -235,7 +228,7 @@ app.post('/wa/message', (req, res) => {
  	res.status(estatus).json(resultado);
 });
 
-app.post('/tw/message', (req, res) => {
+app.post('/tw/message', async (req, res) => {
 
 	console.log("[Brito] :: [Peticion POST PAN /tw/message]");
 	
@@ -327,34 +320,30 @@ app.post('/tw/message', (req, res) => {
 								console.log("[Brito] :: [message] :: [msj_buscar_opcion] :: " + msj_buscar_opcion);	
 
 								var options = {
-									'method': 'POST',
-									'url': 'https://estadisticasmenubot.mybluemix.net/opcion/insert',
-									'headers': {
-										'Content-Type': 'application/json'
-									},
-									body: JSON.stringify(
-									{
-										"conversacion_id": conversationID,
-										"pais": config.info.pais,
-										"app": config.info.nomApp,
-										"opcion": opcion,
-										"transferencia": bandera_tranferido,
-										"fueraHorario": bandera_fueraHorario,
-										"grupoACD": result_action.queue
+									method : 'post',
+									url : config.url_estd,
+									headers : { 'Content-Type': 'application/json'},
+									data: JSON.stringify({
+										"conversacion_id" : conversationID,
+										"pais" : config.info.pais,
+										"app" : config.info.nomApp,
+										"opcion" : opcion,
+										"rrss" : "TW",
+										"transferencia" : bandera_tranferido,
+										"fueraHorario" : bandera_fueraHorario,
+										"grupoACD" : result_action.queue				
 									})
-								};           
+								};          
 
-								if(bandera)
+								if(bandera == true)
 								{
 									if(bandera_opt)
 									{
 										console.log(options);
-										request(options, function (error, response)
-										{ 
-											if (error) throw new Error(error);
-											console.log(response.body);
-										});
-									}
+										var resultado_axios = await axios(options);
+										console.log("[Resultado AXIOS] :: ");
+										console.log(resultado_axios);
+									}									
 								}							
 
 								console.log("[Brito] :: [channel] :: ", channel, " :: [opcion] :: ", opcion);              				
@@ -439,7 +428,7 @@ app.post('/tw/message', (req, res) => {
  	res.status(estatus).json(resultado);
 });
 
-app.post('/fb/message', (req, res) => {
+app.post('/fb/message', async (req, res) => {
 
 	console.log("[Brito] :: [Peticion POST PAN /fb/message]");
 	
@@ -531,34 +520,30 @@ app.post('/fb/message', (req, res) => {
 								console.log("[Brito] :: [message] :: [msj_buscar_opcion] :: " + msj_buscar_opcion);	
 
 								var options = {
-									'method': 'POST',
-									'url': 'https://estadisticasmenubot.mybluemix.net/opcion/insert',
-									'headers': {
-										'Content-Type': 'application/json'
-									},
-									body: JSON.stringify(
-									{
-										"conversacion_id": conversationID,
-										"pais": config.info.pais,
-										"app": config.info.nomApp,
-										"opcion": opcion,
-										"transferencia": bandera_tranferido,
-										"fueraHorario": bandera_fueraHorario,
-										"grupoACD": result_action.queue
+									method : 'post',
+									url : config.url_estd,
+									headers : { 'Content-Type': 'application/json'},
+									data: JSON.stringify({
+										"conversacion_id" : conversationID,
+										"pais" : config.info.pais,
+										"app" : config.info.nomApp,
+										"opcion" : opcion,
+										"rrss" : "FB",
+										"transferencia" : bandera_tranferido,
+										"fueraHorario" : bandera_fueraHorario,
+										"grupoACD" : result_action.queue				
 									})
-								};           
+								};          
 
-								if(bandera)
+								if(bandera == true)
 								{
 									if(bandera_opt)
 									{
 										console.log(options);
-										request(options, function (error, response)
-										{ 
-											if (error) throw new Error(error);
-											console.log(response.body);
-										});
-									}
+										var resultado_axios = await axios(options);
+										console.log("[Resultado AXIOS] :: ");
+										console.log(resultado_axios);
+									}									
 								}							
 
 								console.log("[Brito] :: [channel] :: ", channel, " :: [opcion] :: ", opcion);              				
@@ -724,6 +709,6 @@ app.get('/', (req, res) => {
 	res.status(200).send(respuesta);
 });
 
-http.createServer(app).listen(port, () => {
-  console.log('Server started at http://localhost:' + port);
+http.createServer(app).listen(config.puerto, () => {
+  console.log('Server started MenutBot_PAN at http://localhost:' + config.puerto);
 });
