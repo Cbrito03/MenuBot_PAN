@@ -2,7 +2,7 @@ var info =
 {
   "pais" : "PAN",
   "nomApp" : "MenuBot_PAN",
-  "version" : "3.2.0"
+  "version" : "4.0.0"
 };
 
 var url_estd = 'https://estadisticasmenubot.mybluemix.net/opcion/insert';
