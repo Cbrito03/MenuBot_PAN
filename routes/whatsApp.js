@@ -74,85 +74,8 @@ router.post('/wa/message', async (req, res) => {
 
               if(bandera_TIMEOUT)
               {
-                cadena = cadena.text.toLowerCase(); // minusculas
-                cadena = cadena.trim();
-                msj_buscar_opcion = cadena;
-                cadena = cadena.replace(/,/g,"").replace(/;/g,"").replace(/:/g,"").replace(/\./g,""); // borramos ,;.:
-                cadena = cadena.split(" "); // lo convertimo en array mediante los espacios
-
-                for(var i = 0; i < cadena.length; i++)
-                {
-                  for(var atr in msj_wa.palabras)
-                  {
-                    if(atr.toLowerCase() === cadena[i])
-                    {
-                      opcion = cadena[i];
-                      //msj_buscar = cadena[i];
-                      if(msj_wa.palabras[atr].action.queue === "" && msj_wa.palabras[atr].action.type !== "transfer")
-                      {
-                        result_action = msj_wa.palabras[atr].action;
-                        result_messages = msj_wa.palabras[atr].messages;
-                      }
-                      else if(msj_wa.palabras[atr].action.queue !== "" && msj_wa.palabras[atr].action.type === "transfer")
-                      {
-                        if(horarios)
-                        {
-                          result_action = msj_wa.palabras[atr].action;
-                          result_messages = msj_wa.palabras[atr].messages;                        
-                          bandera_tranferido = true;                    
-                        }
-                        else
-                        { 
-                          console.log("[Brito] :: [No cumple horario] :: [horarios] :: "+horarios);                       
-                          
-                          result_messages = msj_wa.msj_fuera_horario.messages;
-                          result_action = msj_wa.msj_fuera_horario.action;
-                          bandera_fueraHorario = true;                                                                
-                        }
-                      }
-                      
-                      bandera = true;
-                      bandera_opt = true;
-                      break;
-                    }
-                  }      
-                  if(bandera){ break; }
-                }
-
-                if(!bandera)
-                {
-                  result_messages = msj_wa.msj_default.messages;
-                  result_action = msj_wa.msj_default.action;
-                }   
-
-                var options = {
-                  method : 'post',
-                  url : config.url_estd,
-                  headers : { 'Content-Type': 'application/json'},
-                  data: JSON.stringify({
-                    "conversacion_id" : conversationID,
-                    "pais" : config.info.pais,
-                    "app" : config.info.nomApp,
-                    "opcion" : opcion,
-                    "rrss" : "WA",
-                    "transferencia" : bandera_tranferido,
-                    "fueraHorario" : bandera_fueraHorario,
-                    "grupoACD" : result_action.queue        
-                  })
-                };          
-
-                if(bandera == true)
-                {
-                  if(bandera_opt)
-                  {
-                    console.log(options);
-                    var resultado_axios = await axios(options);
-                    console.log("[Resultado AXIOS] :: ");
-                    console.log(resultado_axios);
-                  }                 
-                }         
-
-                console.log("[Brito] :: [channel] :: ", channel, " :: [opcion] :: ", opcion);                     
+                result_messages = msj_wa.msj_default.messages;
+                result_action = msj_wa.msj_default.action;                                 
 
                 resultado = {
                   "context": context,
