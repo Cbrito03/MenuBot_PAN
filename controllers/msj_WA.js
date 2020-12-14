@@ -14,7 +14,7 @@ var colas = {
   }
 };
 
-var mensaje_df = "Nuestro número de WhatsApp ha cambiado, ahora puedes contactarnos ingresando aquí 👉 https://bit.ly/WhatsAppClaroPA. ¡Claro que sí!";
+var mensaje_df = "Nuestro número de WhatsApp ha cambiado, ahora puedes contactarnos ingresando aquí 👉 https://bit.ly/WhatsAppClaroPA";
     
 var mjs_horario = '¡Hola, gracias por comunicarte a Claro, te informamos nuestros horarios de atención!  \n \n ';
     mjs_horario += '⌚Facebook y Twitter  \n \n ';
